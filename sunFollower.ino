@@ -12,6 +12,11 @@ int32_t i32_Flag_Bluetooth_F = 0;
 
 int32_t i32_Flag_Lampada = 0;
 
+void Uart_Init(void);
+void Uart_Putchar(char c_Recebe);
+char Uart_Getchar(void);
+
+
 int main(void)
 {
 	
@@ -36,4 +41,38 @@ int main(void)
 	}
 	
 	return 0;
+}
+
+void Uart_Init(void)
+{
+  UBRR0H = 0;
+  UBRR0L = 103; // Examples of UBRRn Settings for Commonly Used Oscillator Frequencies
+
+  UCSR0A |= (1 << U2X0); //Writing this bit to one will double the transfer rate for asynchronous communication.
+  UCSR0A &= ~(1 << U2X0);  // _BV(U2X0) = (1 << U2X0)      ( Pag. 195 )
+
+  UCSR0C = (1 << UCSZ01) | (1 << UCSZ00); /* 8-bit data  */
+  UCSR0B = (1 << RXEN0) | (1 << TXEN0);   /* Enable RX and TX  */
+}
+
+void Uart_Putchar(char c_Recebe)
+{
+  do
+  {
+  }
+  while (!(UCSR0A & (1 << UDRE0)));
+  UDR0 = c_Recebe;
+}
+
+char Uart_Getchar(void)
+{
+  while (1)
+  {
+    bool K = (UCSR0A & (1 << RXC0));
+    return UDR0;
+    if (K == true)
+    {
+      break;
+    }
+  }
 }
