@@ -42,9 +42,39 @@ int main(void)
 	DDRB |= (1 << DDB6); // SETA O PINO 12 COMO SAÍDA
 	DDRB |= (1 << DDB5); // SETA O PINO 11 COMO SAÍDA
 	
+	Uart_Init();
+	Ad_Init();
+	Pwm_Init();
+	
+	// Loop do sistema
 	while(1)
 	{
-		
+		// Abre e fecha portão através do bluetooth
+		char c_Dados_Bluetooth = Uart_Getchar();
+
+		if ((c_Dados_Bluetooth == 'A') && (i32_Flag_Bluetooth_A != 1)) // Realiza a abertura do portão
+		{
+		  i32_Flag_Bluetooth_F = 0;
+		  PINB |= (0 << c_PINO12); // DESLIGA MOTOR
+		  _delay_ms(50);
+		  PINB |= (1 << c_PINO11); //LIGA MOTOR PARA ABRIR JANELA - PORTA 11
+		  i32_Flag_Bluetooth_A = 1;
+
+		  char c_Buf_Escrita[13] = {'P', 'o', 'r', 't', 'a', ' ', 'A', 'b', 'e', 'r', 't', 'a', '\n'};
+		  Imprime_String(c_Buf_Escrita, 13);
+		}
+
+		if ((c_Dados_Bluetooth == 'F') && (i32_Flag_Bluetooth_F != 1)) //Realiza o fechamento do portão
+		{
+		  i32_Flag_Bluetooth_A = 0;
+		  PINB |= (0 << c_PINO11); // DESLIGA MOTOR
+		  _delay_ms(50);
+		  PINB |= (1 << c_PINO12); //LIGA MOTOR PARA FECHAR JANELA - PORTA 12
+		  i32_Flag_Bluetooth_F = 1;
+
+		  char c_Buf_Escrita[14] = {'P', 'o', 'r', 't', 'a', ' ', 'F', 'e', 'c', 'h', 'a', 'd', 'a', '\n'};
+		  Imprime_String(c_Buf_Escrita, 14);
+		}
 	}
 	
 	return 0;
