@@ -75,6 +75,41 @@ int main(void)
 		  char c_Buf_Escrita[14] = {'P', 'o', 'r', 't', 'a', ' ', 'F', 'e', 'c', 'h', 'a', 'd', 'a', '\n'};
 		  Imprime_String(c_Buf_Escrita, 14);
 		}
+		
+		// Verifica as flags de estado do portão p/ exibição através do bluetooth
+		if (c_Dados_Bluetooth == 'S')
+		{
+		  char c_Buf_Escrita[19] = {'S', 'e', 'n', 's', 'o', 'r', ' ', 'R', 'e', 'f', 'e', 'r', 'e', 'n', 'c', 'i', 'a', ':', ' '};
+		  Imprime_String(c_Buf_Escrita, 19);
+
+		  if (Ler_AD(0) > 300)
+		  {
+			char c_Buf_Escrita[6] = {'A', 't', 'i', 'v', 'o', '\n'};
+			Imprime_String(c_Buf_Escrita, 6);
+		  }
+
+		  if (Ler_AD(0) < 300)
+		  {
+			char c_Buf_Escrita[11] = {'D', 'e', 's', 'a', 't', 'i', 'v', 'a', 'd', 'o', '\n'};
+			Imprime_String(c_Buf_Escrita, 11);
+		  }
+
+		  char c_Buf_Escrita_1[13] = {'S', 'e', 'n', 's', 'o', 'r', ' ', 'C', 'a', 'n', 'o', ':', ' '};
+		  Imprime_String(c_Buf_Escrita_1, 13);
+
+		  if (Ler_AD(1) > 300)
+		  {
+			char c_Buf_Escrita[6] = {'A', 't', 'i', 'v', 'o', '\n'};
+			Imprime_String(c_Buf_Escrita, 6);
+		  }
+
+		  if (Ler_AD(1) < 300)
+		  {
+			char c_Buf_Escrita[11] = {'D', 'e', 's', 'a', 't', 'i', 'v', 'a', 'd', 'o', '\n'};
+			Imprime_String(c_Buf_Escrita, 11);
+		  }
+
+		}
 	}
 	
 	return 0;
