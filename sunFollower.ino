@@ -110,6 +110,61 @@ int main(void)
 		  }
 
 		}
+		
+		// Controle de intensidade da lampada
+		if (c_Dados_Bluetooth == 'L') //Intensidade zero!
+		{
+		  OCR3C = 0;
+		  c_Dados_Bluetooth = 'Z';
+		  i32_Flag_Lampada = 0;
+		}
+
+		if (c_Dados_Bluetooth == 'M') //Intensidade 50%
+		{
+		  OCR3C = 512;
+		  c_Dados_Bluetooth = 'Z';
+		  i32_Flag_Lampada = 512;
+		}
+
+		if (c_Dados_Bluetooth == 'N') //Intensidade 100%
+		{
+		  OCR3C = 1023;
+		  c_Dados_Bluetooth = 'Z';
+		  i32_Flag_Lampada = 1023;
+		}
+
+		if (c_Dados_Bluetooth == 'O') //Adiciona Intensidade
+		{
+		  if (i32_Flag_Lampada < 1003)
+		  {
+			i32_Flag_Lampada = i32_Flag_Lampada + 50;
+			_delay_ms(50);
+			OCR3C = i32_Flag_Lampada;
+		  }
+
+		  if (i32_Flag_Lampada > 1003)
+		  {
+			char d[14] = {'L', 'i', 'm', 'i', 't', 'e', ' ', 'M', 'a', 'x', 'i', 'm', 'o', '\n'};
+			Imprime_String(d, 14);
+		  }
+		  c_Dados_Bluetooth = 'Z';
+		}
+
+		if (c_Dados_Bluetooth == 'P') //Reduz Intensidade
+		{
+		  if (i32_Flag_Lampada > 20)
+		  {
+			i32_Flag_Lampada = i32_Flag_Lampada - 50;
+			_delay_ms(50);
+			OCR3C = i32_Flag_Lampada;
+		  }
+		  if (i32_Flag_Lampada < 20)
+		  {
+			char d[14] = {'L', 'i', 'm', 'i', 't', 'e', ' ', 'M', 'i', 'n', 'i', 'm', 'o', '\n'};
+			Imprime_String(d, 14);
+		  }
+		  c_Dados_Bluetooth = 'Z';
+		}
 	}
 	
 	return 0;
