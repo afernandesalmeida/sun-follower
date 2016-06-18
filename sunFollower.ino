@@ -165,8 +165,61 @@ int main(void)
 		  }
 		  c_Dados_Bluetooth = 'Z';
 		}
-	}
 	
+	
+		// Variaveis usadas no seguidor de sol
+		bool b_Leitura_Digital_Pin_7 = (PINH & (1 << PINH4)); //DIGITALREAD PINO 7
+		bool b_Leitura_Digital_Pin_8 = (PINH & (1 << PINH5)); //DIGITALREAD PINO 8
+		bool b_Leitura_Digital_Pin_9 = (PINH & (1 << PINH6)); //DIGITALREAD PINO 9
+		bool b_Leitura_Digital_Pin_10 = (PINB & (1 << PINB4)); //DIGITALREAD PINO 10
+		
+		// Seguidor do sol
+		if (Ler_AD(0) > 600) //SE A REFERENCIA ESTIVER NO SOL E O FIM DE CURSO 2 NÃO ATIVO!!!
+		{
+
+		  if ((Ler_AD(1) > 600) && (b_Leitura_Digital_Pin_8 != 1) && (b_Leitura_Digital_Pin_10 != 1) && (b_Leitura_Digital_Pin_7 != 1))
+		  {
+			PINH |= (1 << PINH5);
+		  }
+		  if ((Ler_AD(1) > 600) && (b_Leitura_Digital_Pin_8 == 1) && (b_Leitura_Digital_Pin_10 == 1))
+		  {
+			PINH |= (0 << PINH5);
+			_delay_ms(50);
+			PINH |= (1 << PINH4);
+		  }
+
+		  if ((Ler_AD(1) > 600) && (b_Leitura_Digital_Pin_7 == 1) && (b_Leitura_Digital_Pin_9 == 1))
+		  {
+			PINH |= (0 << PINH4);
+			_delay_ms(50);
+			PINH |= (1 << PINH5);
+		  }
+
+		  if (Ler_AD(1) < 600 && (b_Leitura_Digital_Pin_8 == 1 || b_Leitura_Digital_Pin_7 == 1))
+		  {
+			PINH |= (0 << PINH5);
+			PINH |= (0 << PINH4);
+		  }
+		}
+
+		if (Ler_AD(0) < 600) //SE A REFERENCIA ESTIVER NA SOMBRA!!
+		{
+		  if ((b_Leitura_Digital_Pin_9 != 1) && (b_Leitura_Digital_Pin_7 != 1))
+		  {
+			PINH |= (0 << PINH5);
+			_delay_ms(50);
+			PINH |= (1 << PINH4);
+		  }
+		  if ((b_Leitura_Digital_Pin_9 == 1) && (b_Leitura_Digital_Pin_7 == 1))
+		  {
+			PINH |= (0 << PINH4);
+			_delay_ms(50);
+			PINH |= (0 << PINH5);
+		  }
+		}
+	
+	
+	}
 	return 0;
 }
 
